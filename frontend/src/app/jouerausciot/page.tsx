@@ -2,9 +2,19 @@ import type { Metadata } from 'next';
 import ArtistForm from '@/components/forms/ArtistForm';
 
 export const metadata: Metadata = {
-  title: 'Jouer ici',
+  title: 'Jouer au Club — Candidature Artiste',
   description:
-    'Tu as un projet musical ? Envoie ta candidature pour jouer sur la scène du Sciøt Cial Club.',
+    'Tu as un projet musical ? Envoie ta candidature pour jouer sur la scène du Sciøt Cial Club à Les Pieux, Cotentin. Concerts, concerts live, DJ sets.',
+  alternates: {
+    canonical: 'https://www.lesciotcialclub.fr/jouerausciot',
+  },
+  openGraph: {
+    title: 'Jouer au Club — Candidature Artiste | Le Sciøt Cial Club',
+    description:
+      'Propose ta candidature pour jouer sur la scène du Sciøt Cial Club à Les Pieux, Cotentin.',
+    url: 'https://www.lesciotcialclub.fr/jouerausciot',
+    type: 'website',
+  },
 };
 
 export default function JouerPage() {

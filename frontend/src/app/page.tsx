@@ -4,11 +4,22 @@ import { getSiteConfig, getWeekEvents, getCarouselSlides, getHeroBanner } from '
 import { formatDate, formatTime } from '@/lib/utils';
 import Carousel from '@/components/ui/Carousel';
 import CategoryBadge from '@/components/ui/CategoryBadge';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Accueil — Le Sciøt Cial Club',
+  title: 'Le Sciøt Cial Club — Bar, Concerts & Soirées à Les Pieux, Cotentin',
   description:
-    'Le Sciøt Cial Club, bar & concerts au bord de l\'eau. Concerts, DJ sets, soirées à thème en Cotentin, Normandie.',
+    'Bar & concerts au bord de l\'eau à Les Pieux, Sciotot, Cotentin. Concerts live, DJ sets, soirées à thème, cuisine de saison. Entrée libre.',
+  alternates: {
+    canonical: 'https://www.lesciotcialclub.fr',
+  },
+  openGraph: {
+    title: 'Le Sciøt Cial Club — Bar, Concerts & Soirées à Les Pieux',
+    description:
+      'Bar & concerts au bord de l\'eau à Les Pieux, Sciotot. Concerts live, DJ sets, soirées à thème, cuisine de saison. Entrée libre.',
+    url: 'https://www.lesciotcialclub.fr',
+    type: 'website',
+  },
 };
 
 // Revalidate every 30 minutes
@@ -28,6 +39,45 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': ['LocalBusiness', 'FoodEstablishment', 'BarOrPub'],
+          name: 'Le Sciøt Cial Club',
+          alternateName: ['Sciøt Cial Club', 'Le Sciot Cial Club', 'Sciotot'],
+          url: 'https://www.lesciotcialclub.fr',
+          telephone: '+33233042456',
+          email: 'lesciotcialclub@gmail.com',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: '3 Route du Fort',
+            addressLocality: 'Les Pieux',
+            postalCode: '50340',
+            addressRegion: 'Normandie',
+            addressCountry: 'FR',
+          },
+          geo: {
+            '@type': 'GeoCoordinates',
+            latitude: 49.5915229,
+            longitude: -1.8542095,
+          },
+          hasMap: 'https://maps.google.com/?q=3+Route+du+Fort+50340+Les+Pieux',
+          servesCuisine: ['Française', 'Cuisine locale', 'Normande'],
+          menu: 'https://www.lesciotcialclub.fr/menu',
+          priceRange: '€€',
+          currenciesAccepted: 'EUR',
+          paymentAccepted: 'Cash, Carte bancaire',
+          description:
+            'Bar & concerts au bord de l\'eau à Les Pieux, Sciotot, Cotentin. Concerts live, DJ sets, soirées à thème, cuisine de saison. Entrée libre.',
+          image: 'https://www.lesciotcialclub.fr/opengraph-image',
+          logo: 'https://www.lesciotcialclub.fr/opengraph-image',
+          sameAs: [
+            'https://www.instagram.com/lesciotcialclub',
+            'https://www.facebook.com/lesciotcialclub',
+          ],
+        }}
+      />
+
       {/* ═══════════════════════════════════════════════════════════════════════
           HERO
          ═══════════════════════════════════════════════════════════════════════ */}

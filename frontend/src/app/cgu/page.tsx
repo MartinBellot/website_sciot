@@ -3,6 +3,10 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Conditions Générales d\'Utilisation',
   description: 'Mentions légales et conditions générales d\'utilisation du site Le Sciøt Cial Club.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function CguPage() {
@@ -29,7 +33,7 @@ export default function CguPage() {
           <Article title="Article 1 : Mentions légales">
             <p>
               Le site web &laquo;&nbsp;Le Sciøt Cial Club&nbsp;&raquo;, accessible à l&rsquo;adresse
-              www.lesciotcialclub.com, est édité par la société LE SCIOT CIAL CLUB :
+              www.lesciotcialclub.fr, est édité par la société LE SCIOT CIAL CLUB :
             </p>
             <ul>
               <li><strong>Dénomination sociale :</strong> LE SCIOT CIAL CLUB</li>

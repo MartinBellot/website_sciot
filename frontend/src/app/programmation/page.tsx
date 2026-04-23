@@ -2,11 +2,22 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getWeekEvents, getUpcomingEvents, getEventCategories } from '@/lib/api';
 import ProgrammationClient from '@/components/ui/ProgrammationClient';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Programmation',
+  title: 'Programmation — Concerts & Événements',
   description:
-    'Concerts, DJ sets, soirées à thème — retrouvez tous les événements du Sciøt Cial Club.',
+    'Agenda complet des concerts, DJ sets et soirées à thème du Sciøt Cial Club à Les Pieux, Cotentin. Entrée libre pour la plupart des événements.',
+  alternates: {
+    canonical: 'https://www.lesciotcialclub.fr/programmation',
+  },
+  openGraph: {
+    title: 'Programmation — Concerts & Événements | Le Sciøt Cial Club',
+    description:
+      'Agenda complet des concerts, DJ sets et soirées à thème du Sciøt Cial Club à Les Pieux, Cotentin. Entrée libre.',
+    url: 'https://www.lesciotcialclub.fr/programmation',
+    type: 'website',
+  },
 };
 
 export const revalidate = 1800;
@@ -18,8 +29,54 @@ export default async function ProgrammationPage() {
     getEventCategories(),
   ]);
 
+  const eventJsonLd = allEvents.slice(0, 10).map((event) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    description: event.description ?? `${event.title} au Sciøt Cial Club`,
+    startDate: event.start_time ? `${event.date}T${event.start_time}` : event.date,
+    endDate: event.end_time ? `${event.date}T${event.end_time}` : undefined,
+    eventStatus:
+      event.status === 'cancelled'
+        ? 'https://schema.org/EventCancelled'
+        : 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    isAccessibleForFree: event.is_free,
+    offers: {
+      '@type': 'Offer',
+      price: event.is_free ? 0 : parseFloat(event.price ?? '0'),
+      priceCurrency: 'EUR',
+      url: event.ticket_url ?? 'https://www.lesciotcialclub.fr/programmation',
+      availability: 'https://schema.org/InStock',
+    },
+    location: {
+      '@type': 'Place',
+      name: 'Le Sciøt Cial Club',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '3 Route du Fort',
+        addressLocality: 'Les Pieux',
+        postalCode: '50340',
+        addressRegion: 'Normandie',
+        addressCountry: 'FR',
+      },
+    },
+    organizer: {
+      '@type': 'Organization',
+      name: 'Le Sciøt Cial Club',
+      url: 'https://www.lesciotcialclub.fr',
+    },
+    image: event.image
+      ? `https://www.lesciotcialclub.fr${event.image}`
+      : 'https://www.lesciotcialclub.fr/opengraph-image',
+  }));
+
   return (
     <>
+      {eventJsonLd.map((schema, i) => (
+        <JsonLd key={i} data={schema} />
+      ))}
+
       {/* ── Hero ── */}
       <section
         className="wave-container relative flex items-end min-h-[280px] sm:min-h-[320px]"

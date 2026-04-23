@@ -13,17 +13,67 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.lesciotcialclub.fr'),
   title: {
-    default: 'Le Sciøt Cial Club',
+    default: 'Le Sciøt Cial Club — Bar, Concerts & Soirées en Cotentin',
     template: '%s | Le Sciøt Cial Club',
   },
   description:
-    'Le Sciøt Cial Club — Concerts, DJ sets et soirées à thème en Cotentin, Normandie. Bar & restauration sur place.',
-  keywords: ['Sciøt', 'club', 'concerts', 'bar', 'Cotentin', 'Normandie', 'Les Pieux', 'Sciotot'],
+    'Bar & concerts au bord de l\'eau à Les Pieux, Cotentin. Concerts live, DJ sets, soirées à thème, cuisine de saison. Entrée libre.',
+  keywords: [
+    'Sciøt Cial Club',
+    'Sciotot',
+    'bar Cotentin',
+    'concerts Normandie',
+    'Les Pieux',
+    'soirées thème',
+    'DJ sets Cotentin',
+    'musique live Normandie',
+    'bar restaurant Les Pieux',
+    'sortir Cotentin',
+    'événements Manche',
+    'bar bord de mer Normandie',
+  ],
+  authors: [{ name: 'Le Sciøt Cial Club', url: 'https://www.lesciotcialclub.fr' }],
+  creator: 'Le Sciøt Cial Club',
+  publisher: 'Le Sciøt Cial Club',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
     siteName: 'Le Sciøt Cial Club',
     locale: 'fr_FR',
     type: 'website',
+    url: 'https://www.lesciotcialclub.fr',
+    title: 'Le Sciøt Cial Club — Bar, Concerts & Soirées en Cotentin',
+    description:
+      'Bar & concerts au bord de l\'eau à Les Pieux, Cotentin. Concerts live, DJ sets, soirées à thème, cuisine de saison. Entrée libre.',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Le Sciøt Cial Club — Bar & Concerts en Cotentin, Normandie',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Le Sciøt Cial Club — Bar, Concerts & Soirées en Cotentin',
+    description:
+      'Bar & concerts au bord de l\'eau à Les Pieux, Cotentin. Entrée libre.',
+    images: ['/opengraph-image'],
+  },
+  alternates: {
+    canonical: 'https://www.lesciotcialclub.fr',
   },
 };
 

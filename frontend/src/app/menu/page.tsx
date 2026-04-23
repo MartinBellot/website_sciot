@@ -1,11 +1,22 @@
 import type { Metadata } from 'next';
 import { getFullMenu } from '@/lib/api';
 import MenuClient from '@/components/ui/MenuClient';
+import JsonLd from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Menu',
+  title: 'Menu & Carte — Cuisine Locale & Boissons',
   description:
-    'Notre carte : cuisine simple et gourmande à base de produits locaux et de saison, avec boissons et formules.',
+    'Notre carte de cuisine simple et gourmande à base de produits locaux et de saison. Formules, plats, vins et boissons au Sciøt Cial Club à Les Pieux, Cotentin.',
+  alternates: {
+    canonical: 'https://www.lesciotcialclub.fr/menu',
+  },
+  openGraph: {
+    title: 'Menu & Carte — Cuisine Locale | Le Sciøt Cial Club',
+    description:
+      'Cuisine simple et gourmande à base de produits locaux de Normandie. Formules, plats du jour, vins et boissons.',
+    url: 'https://www.lesciotcialclub.fr/menu',
+    type: 'website',
+  },
 };
 
 // Menu doesn't change often — revalidate every hour
@@ -16,6 +27,34 @@ export default async function MenuPage() {
 
   return (
     <>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FoodEstablishment',
+          name: 'Le Sciøt Cial Club',
+          url: 'https://www.lesciotcialclub.fr',
+          menu: 'https://www.lesciotcialclub.fr/menu',
+          servesCuisine: ['Française', 'Cuisine locale', 'Normande'],
+          priceRange: '€€',
+          telephone: '+33233042456',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: '3 Route du Fort',
+            addressLocality: 'Les Pieux',
+            postalCode: '50340',
+            addressRegion: 'Normandie',
+            addressCountry: 'FR',
+          },
+          hasMenu: {
+            '@type': 'Menu',
+            name: 'Carte du Sciøt Cial Club',
+            description: 'Cuisine simple et gourmande, produits locaux de saison. Formules, plats, vins et boissons.',
+            url: 'https://www.lesciotcialclub.fr/menu',
+            inLanguage: 'fr',
+          },
+        }}
+      />
+
       {/* ── Hero ── */}
       <section
         className="relative flex items-end min-h-[260px] sm:min-h-[300px]"
