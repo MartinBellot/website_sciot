@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Menu doesn't change often — revalidate every hour
-export const revalidate = 3600;
+// Always server-render — never pre-render at build time (API unavailable during docker build)
+export const dynamic = 'force-dynamic';
 
 export default async function MenuPage() {
   const menu = await getFullMenu();
