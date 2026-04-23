@@ -131,6 +131,7 @@ class HeroBanner(models.Model):
     class Meta:
         verbose_name = "Bannière Hero"
         verbose_name_plural = "Bannières Hero"
+        ordering = ['-id']
     
     def __str__(self):
         return self.title

@@ -1,5 +1,5 @@
 .DS_Store
-venv/
+.venv/
 build/
 
 # Secrets — never commit these
@@ -8,3 +8,10 @@ build/
 # SQLite dev database — production uses a Docker volume
 api/db.sqlite3
 api/media/
+
+*.pyc
+__pycache__/
+
+node_modules/
+.next/
+dist/

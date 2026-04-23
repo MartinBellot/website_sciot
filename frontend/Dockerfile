@@ -1,16 +1,39 @@
-FROM nginx:alpine
+# ─── Stage 1: Install dependencies ───────────────────────────────────────────
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm ci
 
-# Copy all static frontend files into the nginx html root
-# Build context is the website root, so we copy the static assets directly
-COPY index.html /usr/share/nginx/html/index.html
-COPY programmation.html /usr/share/nginx/html/programmation.html
-COPY menu.html /usr/share/nginx/html/menu.html
-COPY jouerausciot.html /usr/share/nginx/html/jouerausciot.html
-COPY css/ /usr/share/nginx/html/css/
-COPY js/ /usr/share/nginx/html/js/
-COPY ressources/ /usr/share/nginx/html/ressources/
+# ─── Stage 2: Build ───────────────────────────────────────────────────────────
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# Serve static files on port 80 (the stack nginx reverse-proxies to this container)
-RUN printf 'server {\n    listen 80;\n    server_name _;\n    root /usr/share/nginx/html;\n    index index.html;\n    location / {\n        try_files $uri $uri/ /index.html;\n    }\n}\n' > /etc/nginx/conf.d/default.conf
+# API_URL is the internal Docker network address of the Django container
+ARG API_URL=http://api:8000
+ENV API_URL=$API_URL
+ENV NEXT_TELEMETRY_DISABLED=1
 
-EXPOSE 80
+RUN npm run build
+
+# ─── Stage 3: Production runner ───────────────────────────────────────────────
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+USER nextjs
+EXPOSE 3000
+
+CMD ["node", "server.js"]

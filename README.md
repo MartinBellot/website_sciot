@@ -4,38 +4,70 @@ Bar culturel au cœur du Cotentin — Sciotot, Normandie.
 
 ---
 
+## Stack technique
+
+| Couche | Technologie |
+|---|---|
+| Front-end | Next.js 15 + React 19 + TypeScript + Tailwind CSS |
+| Back-end | Django 5 + Django REST Framework + drf-spectacular |
+| Base de données | SQLite |
+| Reverse proxy | Nginx |
+| Conteneurisation | Docker Compose |
+
+---
+
 ## Structure
 
 ```
 website_sciot/
-├── index.html / programmation.html / menu.html / jouerausciot.html
-├── css/style.css          # Styles (Bootstrap 5)
-├── js/api.js              # Appels vers l'API
-├── ressources/            # Images
-├── docker-compose.yml     # 3 services : api + frontend + nginx
-└── api/                   # Back-end Django 5 + DRF
-    ├── core/              # Config site & contact
-    ├── events/            # Événements
-    ├── menu/              # Menu bar
-    ├── media_manager/     # Galerie
-    └── pages/             # Contenu éditorial
+├── docker-compose.yml      # 3 services : api + frontend + nginx
+├── nginx/nginx.conf        # Reverse proxy
+├── api/                    # Back-end Django 5 + DRF
+│   ├── core/               # Configuration site & contact
+│   ├── events/             # Événements & programmation
+│   ├── menu/               # Menu bar (boissons & catégories)
+│   ├── media_manager/      # Galerie & carousel
+│   ├── pages/              # Contenu éditorial
+│   ├── admin_custom/       # Interface d'administration personnalisée
+│   └── sciot_api/          # Settings, urls, wsgi
+└── frontend/               # Front-end Next.js
+    └── src/app/
+        ├── page.tsx            # Accueil
+        ├── programmation/      # Agenda & événements
+        ├── menu/               # Menu bar
+        ├── jouerausciot/       # Jouer au sciot
+        └── cgu/                # Conditions générales d'utilisation
 ```
 
 ---
 
 ## Lancer en local
 
-### API seulement (développement)
+### Développement — API seule
 
 ```bash
 cd api
-chmod +x setup.sh && ./setup.sh   # Première fois
+chmod +x setup.sh && ./setup.sh   # Première fois (crée le venv, migre, charge les fixtures)
 source venv/bin/activate
 python manage.py runserver
 ```
 
-- Admin : `http://localhost:8000/admin-panel/`
-- Docs API : `http://localhost:8000/api/docs/`
+| URL | Description |
+|---|---|
+| `http://localhost:8000/admin-panel/` | Interface d'administration personnalisée |
+| `http://localhost:8000/django-admin/` | Admin Django natif |
+| `http://localhost:8000/api/schema/swagger/` | Documentation interactive de l'API |
+
+### Développement — Frontend seul
+
+```bash
+cd frontend
+npm install        # Première fois
+npm run dev
+```
+
+Le frontend est accessible sur `http://localhost:3000`.
+Il appelle l'API via la variable d'environnement `API_URL` (défaut : `http://localhost:8000`).
 
 ### Stack complet avec Docker
 
@@ -44,7 +76,11 @@ cp .env.example .env   # Remplir les variables
 docker compose up --build
 ```
 
-Site accessible sur `http://localhost:8082`.
+| URL | Description |
+|---|---|
+| `http://localhost:8082/` | Site complet |
+| `http://localhost:8082/admin-panel/` | Interface d'administration |
+| `http://localhost:8082/api/schema/swagger/` | Documentation API |
 
 ---
 
@@ -62,15 +98,18 @@ Copier `.env.example` → `.env`. Ne jamais commiter `.env`.
 
 ---
 
-## Modifier et envoyer en ligne
+## Modifier le contenu
 
-### Modifier le site
+Les données (événements, menu, galerie…) se gèrent depuis l'interface d'administration, sans toucher au code :
 
-- **Pages HTML** : éditer directement `index.html`, `menu.html`, etc.
-- **Styles** : `css/style.css`
-- **Données** (événements, menu…) : passer par `/admin-panel/`, pas besoin de toucher au code.
+- **En local** : `http://localhost:8000/admin-panel/`
+- **En production** : `https://sciot.fr/admin-panel/`
 
-### Envoyer avec Git
+Pour modifier les pages ou les styles, éditer les fichiers dans `frontend/src/`.
+
+---
+
+## Envoyer en ligne
 
 ```bash
 git pull                        # Récupérer les dernières modifs
