@@ -22,17 +22,14 @@ function getBaseUrl(): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function apiFetch<T>(path: string, revalidate = 300): Promise<T | null> {
+async function apiFetch<T>(path: string, _revalidate = 0): Promise<T | null> {
   const url = `${getBaseUrl()}/api${path}`;
-  // In development, skip the data cache so every request is fresh.
-  // In production, use ISR revalidation.
-  const cacheOpts: RequestInit =
-    process.env.NODE_ENV === 'development'
-      ? { cache: 'no-store' }
-      : ({ next: { revalidate } } as RequestInit);
+  // Always fetch fresh — never cache API responses.
+  // Pages that need caching should use force-dynamic + their own caching strategy.
+  // This ensures admins see real-time changes immediately after saving.
   try {
     const res = await fetch(url, {
-      ...cacheOpts,
+      cache: 'no-store',
       // Force JSON response — prevents DRF from returning the browsable HTML
       // API when Django DEBUG=True (which would break JSON.parse silently).
       headers: { Accept: 'application/json' },

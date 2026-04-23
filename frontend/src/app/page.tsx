@@ -156,8 +156,13 @@ export default async function HomePage() {
               weekEvents.map((event) => {
                 const { day, dayName, month } = formatDate(event.date);
                 const time = formatTime(event.start_time);
+                const thumb = event.thumbnail || event.image;
                 return (
-                  <div key={event.id} className="py-4 flex items-center gap-4 group">
+                  <Link
+                    key={event.id}
+                    href="/programmation"
+                    className="py-4 flex items-center gap-4 group -mx-2 px-2 rounded-lg hover:bg-white/5 transition-colors"
+                  >
                     {/* Date */}
                     <div className="text-center text-white min-w-[52px] shrink-0">
                       <div className="text-3xl font-black leading-none">{day}</div>
@@ -167,9 +172,18 @@ export default async function HomePage() {
                     </div>
                     {/* Separator */}
                     <div className="w-px h-10 bg-white/20 shrink-0" />
+                    {/* Thumbnail */}
+                    {thumb && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={thumb}
+                        alt={event.title}
+                        className="shrink-0 w-10 h-10 rounded-md object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+                      />
+                    )}
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <div className="text-white font-bold text-sm uppercase tracking-wide truncate">
+                      <div className="text-white font-bold text-sm uppercase tracking-wide truncate group-hover:text-white/90">
                         {event.title}
                       </div>
                       {time && (
@@ -182,7 +196,11 @@ export default async function HomePage() {
                         <CategoryBadge category={event.category} size="sm" />
                       </div>
                     )}
-                  </div>
+                    {/* Arrow */}
+                    <div className="shrink-0 text-white/25 group-hover:text-white/60 transition-colors text-sm">
+                      →
+                    </div>
+                  </Link>
                 );
               })
             )}
