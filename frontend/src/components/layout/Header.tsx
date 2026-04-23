@@ -203,7 +203,7 @@ export default function Header({ socialLinks, siteName }: HeaderProps) {
           role="dialog"
           aria-modal="true"
           aria-label="Menu navigation"
-          className={`absolute right-0 top-0 h-full w-4/5 max-w-xs flex flex-col glass-bar shadow-2xl transition-transform duration-300 ease-out ${
+          className={`absolute right-0 top-0 h-dvh w-4/5 max-w-xs flex flex-col glass-bar shadow-2xl transition-transform duration-300 ease-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >

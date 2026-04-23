@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 1800;
+export const revalidate = 300; // 5 min — événements mis à jour fréquemment
 
 export default async function ProgrammationPage() {
   const [weekEvents, allEvents, categories] = await Promise.all([

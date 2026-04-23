@@ -31,7 +31,12 @@ async function apiFetch<T>(path: string, revalidate = 300): Promise<T | null> {
       ? { cache: 'no-store' }
       : ({ next: { revalidate } } as RequestInit);
   try {
-    const res = await fetch(url, cacheOpts);
+    const res = await fetch(url, {
+      ...cacheOpts,
+      // Force JSON response — prevents DRF from returning the browsable HTML
+      // API when Django DEBUG=True (which would break JSON.parse silently).
+      headers: { Accept: 'application/json' },
+    });
     if (!res.ok) return null;
     const data = await res.json();
     // Unwrap DRF paginated responses { count, next, previous, results: [...] }
@@ -59,10 +64,10 @@ export const getSocialLinks = (): Promise<SocialLink[]> =>
 
 // ─── Events ──────────────────────────────────────────────────────────────────
 export const getWeekEvents = (): Promise<Event[]> =>
-  apiFetch<Event[]>('/events/week/', 1800).then((d) => d ?? []);
+  apiFetch<Event[]>('/events/week/', 300).then((d) => d ?? []);
 
 export const getUpcomingEvents = (limit = 50): Promise<Event[]> =>
-  apiFetch<Event[]>(`/events/upcoming/?limit=${limit}`, 1800).then((d) => d ?? []);
+  apiFetch<Event[]>(`/events/upcoming/?limit=${limit}`, 300).then((d) => d ?? []);
 
 export const getEventCategories = (): Promise<EventCategory[]> =>
   apiFetch<EventCategory[]>('/events/categories/', 3600).then((d) => d ?? []);

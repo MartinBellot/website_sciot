@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Revalidate every 30 minutes
-export const revalidate = 1800;
+// Revalidate every 5 minutes for up-to-date events
+export const revalidate = 300;
 
 export default async function HomePage() {
   const [config, weekEvents, slides, hero] = await Promise.all([

@@ -152,6 +152,12 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
+# CSRF trusted origins — required for admin/login POST when behind a reverse proxy (Django 4.0+)
+_extra_csrf = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in _extra_csrf.split(',') if o.strip()] or [
+    'http://localhost:8082',
+]
+
 # Login settings
 LOGIN_URL = '/admin-panel/login/'
 LOGIN_REDIRECT_URL = '/admin-panel/'
