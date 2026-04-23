@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
 };
 
-// Revalidate every 5 minutes for up-to-date events
-export const revalidate = 300;
+// Always server-render — never pre-render at build time (API unavailable during docker build)
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const [config, weekEvents, slides, hero] = await Promise.all([
