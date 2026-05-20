@@ -84,8 +84,12 @@ class Event(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             from django.utils.text import slugify
-            base_slug = slugify(self.title)
-            self.slug = f"{base_slug}-{self.date.strftime('%Y%m%d')}"
+            import uuid
+            base_slug = slugify(self.title) or uuid.uuid4().hex[:8]
+            if self.date:
+                self.slug = f"{base_slug}-{self.date.strftime('%Y%m%d')}"
+            else:
+                self.slug = f"{base_slug}-{uuid.uuid4().hex[:6]}"
         super().save(*args, **kwargs)
     
     @property

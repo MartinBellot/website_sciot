@@ -14,9 +14,10 @@ const SECTIONS = [
 
 interface MenuClientProps {
   menu: FullMenu | null;
+  showPrices?: boolean;
 }
 
-export default function MenuClient({ menu }: MenuClientProps) {
+export default function MenuClient({ menu, showPrices = false }: MenuClientProps) {
   const [activeSection, setActiveSection] = useState<string>('formules');
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -98,7 +99,7 @@ export default function MenuClient({ menu }: MenuClientProps) {
             <SectionDivider icon="✦" title="Nos Formules" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {menu.special_menus.map((special) => (
-                <SpecialCard key={special.id} special={special} />
+                <SpecialCard key={special.id} special={special} showPrices={showPrices} />
               ))}
             </div>
           </section>
@@ -112,7 +113,7 @@ export default function MenuClient({ menu }: MenuClientProps) {
               {menu.food_categories
                 .filter((c) => c.items.length > 0)
                 .map((cat) => (
-                  <FoodCategoryBlock key={cat.id} category={cat} />
+                  <FoodCategoryBlock key={cat.id} category={cat} showPrices={showPrices} />
                 ))}
             </div>
           </section>
@@ -126,7 +127,7 @@ export default function MenuClient({ menu }: MenuClientProps) {
               {menu.drink_categories
                 .filter((c) => c.drinks.length > 0)
                 .map((cat) => (
-                  <DrinkCategoryBlock key={cat.id} category={cat} />
+                  <DrinkCategoryBlock key={cat.id} category={cat} showPrices={showPrices} />
                 ))}
             </div>
           </section>
@@ -162,15 +163,17 @@ function SectionDivider({ icon, title }: { icon: string; title: string }) {
   );
 }
 
-function SpecialCard({ special }: { special: FullMenu['special_menus'][number] }) {
+function SpecialCard({ special, showPrices }: { special: FullMenu['special_menus'][number]; showPrices: boolean }) {
   const lines = special.content?.split('\n').filter(Boolean) ?? [];
   return (
     <div className="rounded-2xl overflow-hidden border-2 border-primary shadow-sm hover:shadow-lg transition-shadow duration-300">
       {/* Header */}
       <div className="bg-primary text-white text-center px-5 pt-6 pb-5">
-        <div className="text-4xl font-black leading-none">
-          {formatPrice(special.price)}
-        </div>
+        {showPrices && (
+          <div className="text-4xl font-black leading-none">
+            {formatPrice(special.price)}
+          </div>
+        )}
         <div className="mt-2 font-bold text-sm uppercase tracking-widest opacity-90">
           {special.name}
         </div>
@@ -199,7 +202,7 @@ function SpecialCard({ special }: { special: FullMenu['special_menus'][number] }
   );
 }
 
-function FoodCategoryBlock({ category }: { category: FullMenu['food_categories'][number] }) {
+function FoodCategoryBlock({ category, showPrices }: { category: FullMenu['food_categories'][number]; showPrices: boolean }) {
   return (
     <div className="rounded-2xl overflow-hidden shadow-sm">
       <div className="bg-primary px-5 py-3">
@@ -230,9 +233,11 @@ function FoodCategoryBlock({ category }: { category: FullMenu['food_categories']
                     isSpicy={item.is_spicy}
                   />
                 </div>
-                <span className="text-lg font-black text-primary shrink-0 pt-0.5">
-                  {formatPrice(item.price)}
-                </span>
+                {showPrices && (
+                  <span className="text-lg font-black text-primary shrink-0 pt-0.5">
+                    {formatPrice(item.price)}
+                  </span>
+                )}
               </div>
             </div>
           ))}
@@ -241,7 +246,7 @@ function FoodCategoryBlock({ category }: { category: FullMenu['food_categories']
   );
 }
 
-function DrinkCategoryBlock({ category }: { category: FullMenu['drink_categories'][number] }) {
+function DrinkCategoryBlock({ category, showPrices }: { category: FullMenu['drink_categories'][number]; showPrices: boolean }) {
   // Pick a color cycle for drink categories
   const colors = ['#8d4932', '#6caab9', '#b88a68', '#6b3a28', '#4d97aa'];
   const color = colors[category.id % colors.length];
@@ -268,9 +273,11 @@ function DrinkCategoryBlock({ category }: { category: FullMenu['drink_categories
               {drink.volume && (
                 <span className="text-xs text-gray-400 shrink-0">{drink.volume}</span>
               )}
-              <span className="text-sm font-black text-primary shrink-0 ml-auto">
-                {formatPrice(drink.price)}
-              </span>
+              {showPrices && (
+                <span className="text-sm font-black text-primary shrink-0 ml-auto">
+                  {formatPrice(drink.price)}
+                </span>
+              )}
             </div>
           ))}
       </div>
